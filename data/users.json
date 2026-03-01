@@ -1,0 +1,23 @@
+[
+  {
+    "id": "1772343627949",
+    "username": "akshay_yemmewar",
+    "email": "yemmewarakshay@gmail.com",
+    "password": "$2a$10$94T1JXlN3qKd2axOeAzpzOnw2iEPNYxTZCXsTdPq3DOA.75ANWEXm",
+    "created_at": "2026-03-01T05:40:28.051Z"
+  },
+  {
+    "id": "1772344075316",
+    "username": "akshay_yemmewar11",
+    "email": "yemmewarakshay1@gmail.com",
+    "password": "$2a$10$jo7K.fKGnIaiqRPWSArKEuEk1QCeynXIQ5J69cT4I3D9cBLb72wi2",
+    "created_at": "2026-03-01T05:47:55.744Z"
+  },
+  {
+    "id": "1772344683299",
+    "username": "akshay_yemmewar1",
+    "email": "yemmewarakshay2@gmail.com",
+    "password": "$2a$10$5V68chalWH6SDZeA5ZgPUu.73A8.nkecNV7zSEFEflxnw44GHw7t6",
+    "created_at": "2026-03-01T05:58:03.533Z"
+  }
+]

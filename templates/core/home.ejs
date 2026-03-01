@@ -1,0 +1,124 @@
+<!-- Hero Section -->
+<div class="hero-modern">
+    <div class="hero-particles"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge-wrapper">
+            <span class="hero-badge">🌱 Sustainable Energy Solutions</span>
+        </div>
+        <h1 class="hero-title">
+            Power Your Future with<br>
+            <span class="highlight">Smart Solar Management</span>
+        </h1>
+        <p class="hero-subtitle">Track, monitor, and recycle your solar panels with intelligent lifecycle management</p>
+        <div class="hero-buttons">
+            <% if (!user) { %>
+                <a href="/register" class="btn-hero primary">
+                    Get Started
+                    <span class="btn-arrow">→</span>
+                </a>
+            <% } else { %>
+                <a href="/dashboard" class="btn-hero primary">Go to Dashboard</a>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Scroll Sections -->
+<section class="scroll-section" data-bg="#f8f9fa">
+    <div class="scroll-container">
+        <div class="scroll-image">
+            <img src="/images/shutterstock_resized_1200x600.jpg" alt="Solar Panels">
+        </div>
+        <div class="scroll-content">
+            <span class="section-badge">Real-Time Monitoring</span>
+            <h2>Track Your Solar Investment</h2>
+            <p>Monitor panel performance, age, and status with automated calculations. Get instant updates on your solar panel lifecycle and make informed decisions.</p>
+            <ul class="feature-list">
+                <li>✓ Automated lifecycle tracking</li>
+                <li>✓ Performance analytics</li>
+                <li>✓ Instant status updates</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="scroll-section" data-bg="#ffffff">
+    <div class="scroll-container reverse">
+        <div class="scroll-image">
+            <div class="stat-display">
+                <div class="stat-item-large">
+                    <h3>25</h3>
+                    <p>Years Lifespan</p>
+                </div>
+                <div class="stat-item-large">
+                    <h3>100%</h3>
+                    <p>Tracking</p>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-content">
+            <span class="section-badge">Smart Alerts</span>
+            <h2>Never Miss Important Dates</h2>
+            <p>Receive notifications 2 years before panel expiry. Our intelligent alert system ensures you're always prepared for maintenance or replacement.</p>
+            <ul class="feature-list">
+                <li>✓ Early expiry warnings</li>
+                <li>✓ Email notifications</li>
+                <li>✓ Maintenance reminders</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="scroll-section" data-bg="#f8f9fa">
+    <div class="scroll-container">
+        <div class="scroll-image">
+            <div class="recycler-preview">
+                <div class="preview-card">♻️ Verified Recyclers</div>
+                <div class="preview-card">🌍 Eco-Friendly</div>
+            </div>
+        </div>
+        <div class="scroll-content">
+            <span class="section-badge">Recycler Network</span>
+            <h2>Connect With Certified Recyclers</h2>
+            <p>Access our verified network of recycling facilities and find certified recyclers in your area for responsible and eco-friendly solar panel recycling.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Banner -->
+<section class="stats-banner">
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-box">
+                <h3>25</h3>
+                <p>Years Average Lifespan</p>
+            </div>
+            <div class="stat-box">
+                <h3>75</h3>
+                <p>kg/kW Estimated Waste</p>
+            </div>
+            <div class="stat-box">
+                <h3>95</h3>
+                <p>% Materials Recoverable</p>
+            </div>
+            <div class="stat-box">
+                <h3>100</h3>
+                <p>% Automated Tracking</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('.scroll-section');
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight * 0.75;
+        if (isVisible) {
+            section.classList.add('active');
+        }
+    });
+});
+</script>
