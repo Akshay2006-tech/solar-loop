@@ -38,13 +38,22 @@ router.post('/login', async (req, res) => {
       isAdmin: user.isAdmin || false
     };
     
-    // Redirect to admin dashboard if user is admin
-    if (user.isAdmin) {
-      return res.redirect('/admin/dashboard');
-    }
-    
-    res.redirect('/dashboard');
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        req.session.messages = ['Login error'];
+        return res.redirect('/login');
+      }
+      
+      // Redirect to admin dashboard if user is admin
+      if (user.isAdmin) {
+        return res.redirect('/admin/dashboard');
+      }
+      
+      res.redirect('/dashboard');
+    });
   } catch (err) {
+    console.error('Login error:', err);
     req.session.messages = ['Login error'];
     res.redirect('/login');
   }
