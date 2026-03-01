@@ -17,7 +17,10 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 }
 
 async function sendWelcomeEmail(userEmail, username) {
-  if (!transporter) return { success: true };
+  if (!transporter) {
+    console.log('⚠️  Email not configured');
+    return { success: false };
+  }
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -38,11 +41,11 @@ async function sendWelcomeEmail(userEmail, username) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('✓ Welcome email sent');
+    console.log('✓ Welcome email sent to', userEmail);
     return { success: true };
   } catch (error) {
-    console.log('✗ Welcome email failed');
-    return { success: true };
+    console.log('✗ Welcome email failed:', error.message);
+    return { success: false };
   }
 }
 
