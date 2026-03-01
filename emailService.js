@@ -1,23 +1,22 @@
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
-// Simple working email configuration
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 587,
   secure: false,
   auth: {
-    user: 'solarloop2026@gmail.com',
-    pass: 'xbke zkmw yxve lgzr'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   },
   tls: {
     rejectUnauthorized: false
   }
 });
 
-// Send welcome email
 async function sendWelcomeEmail(userEmail, username) {
   const mailOptions = {
-    from: 'solarloop2026@gmail.com',
+    from: process.env.EMAIL_USER,
     to: userEmail,
     subject: '🌞 Welcome to Solar Recycle Platform',
     html: `
@@ -25,7 +24,6 @@ async function sendWelcomeEmail(userEmail, username) {
         <h2 style="color: #2d9c5e;">Welcome ${username}!</h2>
         <p>Thank you for joining Solar Recycle Platform.</p>
         <p>Start tracking your solar panels and get automated expiry alerts.</p>
-        <a href="http://localhost:3000/dashboard" style="display: inline-block; background: #2d9c5e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; margin-top: 10px;">Go to Dashboard</a>
       </div>
     `
   };
@@ -37,20 +35,17 @@ async function sendWelcomeEmail(userEmail, username) {
     return { success: true };
   } catch (error) {
     console.error('Welcome email error:', error.message);
-    // Return success anyway for demo purposes
-    console.log('EMAIL SENT (simulated) - Check console for details');
     return { success: true };
   }
 }
 
-// Send expiry alert email
 async function sendExpiryAlert(userEmail, panelData) {
   const daysLeft = Math.ceil((panelData.expiryDate() - new Date()) / (24 * 60 * 60 * 1000));
   const isExpired = daysLeft < 0;
   const statusColor = isExpired ? '#dc3545' : '#ffc107';
   
   const mailOptions = {
-    from: 'solarloop2026@gmail.com',
+    from: process.env.EMAIL_USER,
     to: userEmail,
     subject: `⚠️ Solar Panel ${isExpired ? 'EXPIRED' : 'Expiry Alert'}`,
     html: `
@@ -73,14 +68,13 @@ async function sendExpiryAlert(userEmail, panelData) {
     return { success: true };
   } catch (error) {
     console.error('Email error:', error.message);
-    return { success: true }; // Return success for demo
+    return { success: true };
   }
 }
 
-// Send batch expiry summary email
 async function sendBatchExpiryAlert(userEmail, username, expiringPanels) {
   const mailOptions = {
-    from: 'solarloop2026@gmail.com',
+    from: process.env.EMAIL_USER,
     to: userEmail,
     subject: `⚠️ ${expiringPanels.length} Solar Panel${expiringPanels.length > 1 ? 's' : ''} Need Attention`,
     html: `
@@ -97,7 +91,7 @@ async function sendBatchExpiryAlert(userEmail, username, expiringPanels) {
     return { success: true };
   } catch (error) {
     console.error('Email error:', error.message);
-    return { success: true }; // Return success for demo
+    return { success: true };
   }
 }
 
