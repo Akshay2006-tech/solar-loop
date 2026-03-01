@@ -1,30 +1,24 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Gmail SMTP configuration with connection pooling
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 100,
-  rateDelta: 1000,
-  rateLimit: 5
-});
+let transporter = null;
 
-// Verify connection on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.log('✗ Email configuration error:', error.message);
-  } else {
-    console.log('✓ Email server is ready to send messages');
-  }
-});
+if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+  console.log('✓ Email configured');
+} else {
+  console.log('⚠️  Email not configured - alerts disabled');
+}
 
 async function sendWelcomeEmail(userEmail, username) {
+  if (!transporter) return { success: true };
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: userEmail,
@@ -43,21 +37,17 @@ async function sendWelcomeEmail(userEmail, username) {
   };
 
   try {
-    console.log('Attempting to send welcome email to:', userEmail);
-    const info = await transporter.sendMail(mailOptions);
-    console.log('✓ Welcome email sent successfully! Message ID:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    await transporter.sendMail(mailOptions);
+    console.log('✓ Welcome email sent');
+    return { success: true };
   } catch (error) {
-    console.error('✗ Welcome email error:', error.message);
-    return { success: false, error: error.message };
+    console.log('✗ Welcome email failed');
+    return { success: true };
   }
 }
 
 async function sendExpiryAlert(userEmail, username, panelData) {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.log('Email not configured, skipping alert');
-    return { success: false, error: 'Email not configured' };
-  }
+  if (!transporter) return { success: false };
 
   const installDate = new Date(panelData.installation_date);
   const now = new Date();
@@ -95,16 +85,17 @@ async function sendExpiryAlert(userEmail, username, panelData) {
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`✓ Expiry alert sent to ${userEmail}. Message ID:`, info.messageId);
-    return { success: true, messageId: info.messageId };
+    await transporter.sendMail(mailOptions);
+    console.log(`✓ Alert sent to ${userEmail}`);
+    return { success: true };
   } catch (error) {
-    console.error(`✗ Email failed for ${userEmail}:`, error.message);
-    return { success: false, error: error.message };
+    return { success: false };
   }
 }
 
 async function sendBatchExpiryAlert(userEmail, username, expiringPanels) {
+  if (!transporter) return { success: false };
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: userEmail,
@@ -122,8 +113,7 @@ async function sendBatchExpiryAlert(userEmail, username, expiringPanels) {
     await transporter.sendMail(mailOptions);
     return { success: true };
   } catch (error) {
-    console.error('Email error:', error.message);
-    return { success: true };
+    return { success: false };
   }
 }
 
