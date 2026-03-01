@@ -11,9 +11,9 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Start expiry alert scheduler (disabled until cronJobs.js is uploaded)
-// const { scheduleExpiryAlerts } = require('./cronJobs');
-// scheduleExpiryAlerts();
+// Start expiry alert scheduler
+const { scheduleExpiryAlerts } = require('./cronJobs');
+scheduleExpiryAlerts();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
