@@ -230,4 +230,45 @@ router.get('/admin/dashboard', isAuth, isAdmin, async (req, res) => {
   }
 });
 
+// Admin View User Panels
+router.get('/admin/user/:userId/panels', isAuth, isAdmin, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).select('-password');
+    const panels = await SolarPanel.find({ userId: req.params.userId });
+    
+    if (!user) {
+      req.session.messages = ['User not found'];
+      return res.redirect('/admin/dashboard');
+    }
+    
+    const now = new Date();
+    let safe = 0, near = 0, expired = 0, waste = 0;
+    
+    panels.forEach(p => {
+      const years = (now - new Date(p.installation_date)) / (365.25 * 24 * 60 * 60 * 1000);
+      const remaining = (p.warranty_years || 25) - years;
+      
+      if (remaining > 2) safe++;
+      else if (remaining > 0) near++;
+      else expired++;
+      
+      waste += (p.capacity_watts || 0) * 0.02;
+    });
+    
+    res.render('core/admin_user_panels', {
+      user,
+      panels,
+      total_panels: panels.length,
+      safe_count: safe,
+      near_expiry_count: near,
+      expired_count: expired,
+      total_waste: waste
+    });
+  } catch (err) {
+    console.error('Admin view user panels error:', err);
+    req.session.messages = ['Error loading user panels'];
+    res.redirect('/admin/dashboard');
+  }
+});
+
 module.exports = router;
