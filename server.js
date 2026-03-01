@@ -4,7 +4,6 @@ const MongoStore = require('connect-mongo');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const connectDB = require('./db');
-const { scheduleExpiryAlerts } = require('./cronJobs');
 require('dotenv').config();
 
 const app = express();
@@ -12,8 +11,9 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Start expiry alert scheduler
-scheduleExpiryAlerts();
+// Start expiry alert scheduler (disabled until cronJobs.js is uploaded)
+// const { scheduleExpiryAlerts } = require('./cronJobs');
+// scheduleExpiryAlerts();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'templates'));
