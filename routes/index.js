@@ -110,10 +110,12 @@ router.post('/register', async (req, res) => {
     try {
       const emailResult = await sendWelcomeEmail(email, username);
       if (emailResult.success) {
-        console.log(`Welcome email sent successfully to ${email}`);
+        console.log(`Welcome email sent to ${email}`);
+      } else {
+        console.log(`Welcome email not sent to ${email}`);
       }
     } catch (emailError) {
-      console.log(`Welcome email error for ${email}:`, emailError);
+      console.log(`Welcome email error for ${email}`);
     }
     
     // Auto-login after registration
