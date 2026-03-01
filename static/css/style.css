@@ -61,14 +61,7 @@ main {
 .navbar-menu a {
     color: #333;
     text-decoration: none;
-    transition: all 0.3s;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
     font-weight: 500;
-}
-
-.navbar-menu a:hover {
-    color: #2d9c5e;
 }
 
 .btn-nav {
