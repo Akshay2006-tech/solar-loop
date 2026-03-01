@@ -171,22 +171,26 @@ router.get('/dashboard', isAuth, async (req, res) => {
 router.get('/add-panel', isAuth, (req, res) => res.render('core/add_panel'));
 router.post('/add-panel', isAuth, async (req, res) => {
   try {
+    const capacity_kw = parseFloat(req.body.capacity_kw);
+    const capacity_watts = capacity_kw * 1000;
+    
     const panel = new SolarPanel({
       userId: req.session.user.id,
       brand: req.body.brand,
-      model: req.body.model,
-      capacity_watts: req.body.capacity_watts,
-      warranty_years: req.body.warranty_years || 25,
-      installation_date: req.body.installation_date,
+      model: req.body.model || '',
+      capacity_watts: capacity_watts,
+      warranty_years: parseInt(req.body.warranty_years) || 25,
+      installation_date: new Date(req.body.installation_date),
       location: req.body.location,
-      serial_number: req.body.serial_number
+      serial_number: req.body.serial_number || ''
     });
     
     await panel.save();
     req.session.messages = ['Solar panel registered successfully!'];
     res.redirect('/dashboard');
   } catch (err) {
-    req.session.messages = ['Failed to add panel'];
+    console.error('Add panel error:', err);
+    req.session.messages = ['Failed to add panel: ' + err.message];
     res.redirect('/add-panel');
   }
 });
