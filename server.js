@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const connectDB = require('./db');
@@ -21,7 +22,15 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'solar-recycle-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000 }
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/solar-recycle',
+    touchAfter: 24 * 3600
+  }),
+  cookie: { 
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production'
+  }
 }));
 
 app.use((req, res, next) => {
