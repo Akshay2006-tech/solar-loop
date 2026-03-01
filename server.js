@@ -18,18 +18,19 @@ app.set('layout', 'layout');
 app.use(express.static(path.join(__dirname, 'static'), { maxAge: '1d' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'solar-recycle-secret',
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
   store: MongoStore.create({
     mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/solar-recycle',
-    touchAfter: 24 * 3600
+    ttl: 24 * 60 * 60
   }),
   cookie: { 
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production'
+    secure: false
   }
 }));
 
