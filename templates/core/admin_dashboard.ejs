@@ -29,7 +29,11 @@
                 <tbody>
                     <% users.forEach(user => { %>
                         <tr style="border-bottom: 1px solid #e0e0e0;">
-                            <td style="padding: 1rem;"><%= user.username %></td>
+                            <td style="padding: 1rem;">
+                                <a href="/admin/user/<%= user._id %>/panels" style="color: #4a7c2c; text-decoration: none; font-weight: 600;">
+                                    <%= user.username %>
+                                </a>
+                            </td>
                             <td style="padding: 1rem;"><%= user.email %></td>
                             <td style="padding: 1rem;">
                                 <% if (user.isAdmin) { %>
