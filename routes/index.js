@@ -64,9 +64,34 @@ router.post('/register', async (req, res) => {
   try {
     const { username, email, password } = req.body;
     
+    // Validation
+    if (!username || !email || !password) {
+      req.session.messages = ['All fields are required'];
+      return res.redirect('/register');
+    }
+    
+    if (username.length < 3) {
+      req.session.messages = ['Username must be at least 3 characters long'];
+      return res.redirect('/register');
+    }
+    
+    if (password.length < 6) {
+      req.session.messages = ['Password must be at least 6 characters long'];
+      return res.redirect('/register');
+    }
+    
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      req.session.messages = ['Please enter a valid email address'];
+      return res.redirect('/register');
+    }
+    
     const existingUser = await User.findOne({ $or: [{ username }, { email }] });
     if (existingUser) {
-      req.session.messages = ['Username or email already exists'];
+      if (existingUser.username === username) {
+        req.session.messages = ['Username already exists. Please choose a different username.'];
+      } else {
+        req.session.messages = ['Email already registered. Please use a different email.'];
+      }
       return res.redirect('/register');
     }
     
@@ -93,7 +118,8 @@ router.post('/register', async (req, res) => {
     req.session.messages = ['Registration successful! Please login.'];
     res.redirect('/login');
   } catch (err) {
-    req.session.messages = ['Registration failed'];
+    console.error('Registration error:', err);
+    req.session.messages = ['Registration failed. Please try again.'];
     res.redirect('/register');
   }
 });
