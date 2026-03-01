@@ -1,12 +1,26 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Gmail SMTP configuration
+// Gmail SMTP configuration with connection pooling
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 100,
+  rateDelta: 1000,
+  rateLimit: 5
+});
+
+// Verify connection on startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.log('✗ Email configuration error:', error.message);
+  } else {
+    console.log('✓ Email server is ready to send messages');
   }
 });
 
