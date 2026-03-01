@@ -116,8 +116,21 @@ router.post('/register', async (req, res) => {
       console.log(`Welcome email error for ${email}:`, emailError);
     }
     
-    req.session.messages = ['Registration successful! Please login.'];
-    res.redirect('/login');
+    // Auto-login after registration
+    req.session.user = { 
+      id: user._id.toString(), 
+      username: user.username,
+      isAdmin: false
+    };
+    
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error:', err);
+        req.session.messages = ['Registration successful! Please login.'];
+        return res.redirect('/login');
+      }
+      res.redirect('/dashboard');
+    });
   } catch (err) {
     console.error('Registration error:', err);
     req.session.messages = ['Registration failed. Please try again.'];
