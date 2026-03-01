@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { sendWelcomeEmail } = require('../emailService');
+const { checkAndSendAlerts } = require('../cronJobs');
 const User = require('../models/UserMongo');
 const SolarPanel = require('../models/SolarPanelMongo');
 
@@ -186,6 +187,10 @@ router.post('/add-panel', isAuth, async (req, res) => {
     });
     
     await panel.save();
+    
+    // Check immediately if this panel needs an alert
+    checkAndSendAlerts().catch(err => console.error('Alert check error:', err));
+    
     req.session.messages = ['Solar panel registered successfully!'];
     res.redirect('/dashboard');
   } catch (err) {
